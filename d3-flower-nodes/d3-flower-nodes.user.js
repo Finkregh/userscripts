@@ -133,7 +133,7 @@
     if (typeof chroma !== 'undefined') {
       try {
         return chroma(color).darken(1.5).hex();
-      } catch (_) { /* fall through */ }
+      } catch { /* fall through */ }
     }
     // Fallback: parse hex and reduce brightness
     const hex = color.replace('#', '');
