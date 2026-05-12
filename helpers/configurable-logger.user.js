@@ -65,7 +65,7 @@
       error: (...args) => {
         if (shouldLog('error')) console.error(config.prefix, ...args);
       },
-      setLevel: (level) => {
+      setLevel: level => {
         if (level in LOG_LEVELS) config.logLevel = level;
       },
       getLevel: () => config.logLevel,

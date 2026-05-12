@@ -1,0 +1,48 @@
+# Pre-commit configuration for userscripts
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+  # ESLint for JavaScript linting (flat config)
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v10.3.0
+    hooks:
+      - id: eslint
+        files: \.(js|jsx|ts|tsx)$
+        types: [file]
+        args: [--fix]
+        additional_dependencies:
+          - eslint@^9.15.0
+          - '@eslint/js@^9.15.0'
+          - globals@^15.0.0
+
+  # Prettier for code formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        files: \.(js|jsx|ts|tsx|json|yaml|yml|md)$
+        args: [--write]
+
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # Userscript specific checks
+  - repo: local
+    hooks:
+      - id: userscript-headers
+        name: Check userscript headers
+        entry: bash -c 'find . -name "*.user.js" -exec grep -l "@name\|@version\|@match" {} \; | wc -l'
+        language: system
+        files: \.user\.js$
+        pass_filenames: false
+        verbose: true

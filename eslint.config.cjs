@@ -10,6 +10,11 @@ module.exports = [
       sourceType: 'script',
       globals: {
         ...globals.browser,
+        // UMD wrapper globals
+        define: 'readonly',
+        module: 'writable',
+        exports: 'writable',
+        require: 'readonly',
         // Core Greasemonkey/Tampermonkey API
         GM_setValue: 'readonly',
         GM_getValue: 'readonly',
@@ -42,7 +47,6 @@ module.exports = [
       },
     },
     rules: {
-      // Userscript-friendly rules
       'no-console': 'off',
       'no-alert': 'off',
       'no-undef': 'error',
@@ -65,6 +69,9 @@ module.exports = [
     files: ['**/test/**/*.js'],
     languageOptions: {
       sourceType: 'module',
+      globals: {
+        ...globals.node,
+      },
     },
   },
   {

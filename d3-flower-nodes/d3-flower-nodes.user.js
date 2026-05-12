@@ -33,7 +33,7 @@
   } else {
     root.d3FlowerNodes = factory(root.d3);
   }
-}(typeof globalThis !== 'undefined' ? globalThis : this, function (d3) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (d3) {
   'use strict';
 
   /**
@@ -48,9 +48,23 @@
     const hw = width / 2;
     // Cubic bezier petal shape: narrow base, widens in middle, pointed tip
     return [
-      'M', 0, 0,
-      'C', hw, -length * 0.3, hw, -length * 0.7, 0, -length,
-      'C', -hw, -length * 0.7, -hw, -length * 0.3, 0, 0,
+      'M',
+      0,
+      0,
+      'C',
+      hw,
+      -length * 0.3,
+      hw,
+      -length * 0.7,
+      0,
+      -length,
+      'C',
+      -hw,
+      -length * 0.7,
+      -hw,
+      -length * 0.3,
+      0,
+      0,
       'Z',
     ].join(' ');
   }
@@ -60,13 +74,13 @@
    *
    * @param {d3.Selection} selection - D3 selection of <g> elements to append flowers into
    * @param {object} opts - Configuration options
-   * @param {function|number} opts.petalCount  - Number of petals (accessor or constant)
-   * @param {function|string} opts.color       - Petal fill color (accessor or constant)
+   * @param {function|number} opts.petalCount    - Number of petals (accessor or constant)
+   * @param {function|string} opts.color         - Petal fill color (accessor or constant)
    * @param {function|string} [opts.strokeColor] - Petal stroke color; if omitted, derived from color
-   * @param {number} [opts.radius=12]          - Petal length (flower radius)
-   * @param {number} [opts.petalWidth]         - Petal width; defaults to radius * 0.45
-   * @param {number} [opts.opacity=0.35]       - Petal fill opacity
-   * @param {number} [opts.centerRadius=3]     - Center circle radius
+   * @param {function|number} [opts.radius=12]   - Petal length (accessor or constant)
+   * @param {function|number} [opts.petalWidth]  - Petal width (accessor or constant); defaults to radius * 0.45
+   * @param {number} [opts.opacity=0.35]         - Petal fill opacity
+   * @param {function|number} [opts.centerRadius=3] - Center circle radius (accessor or constant)
    * @returns {d3.Selection} The input selection (for chaining)
    */
   function createFlowerNode(selection, opts) {
@@ -74,22 +88,24 @@
       petalCount,
       color,
       strokeColor,
-      radius = 12,
-      petalWidth,
+      radius: radiusOpt = 12,
+      petalWidth: petalWidthOpt,
       opacity = 0.35,
-      centerRadius = 3,
+      centerRadius: centerRadiusOpt = 3,
     } = opts || {};
-
-    const pw = petalWidth || radius * 0.45;
-    const path = petalPath(radius, pw);
 
     selection.each(function (d, i) {
       const g = d3.select(this);
-      const n = typeof petalCount === 'function' ? petalCount(d, i) : (petalCount || 0);
-      const c = typeof color === 'function' ? color(d, i) : (color || '#888');
-      const sc = typeof strokeColor === 'function'
-        ? strokeColor(d, i)
-        : (strokeColor || darkenColor(c));
+      const n = typeof petalCount === 'function' ? petalCount(d, i) : petalCount || 0;
+      const c = typeof color === 'function' ? color(d, i) : color || '#888';
+      const sc =
+        typeof strokeColor === 'function' ? strokeColor(d, i) : strokeColor || darkenColor(c);
+      const r = typeof radiusOpt === 'function' ? radiusOpt(d, i) : radiusOpt;
+      const cr = typeof centerRadiusOpt === 'function' ? centerRadiusOpt(d, i) : centerRadiusOpt;
+      const pw =
+        typeof petalWidthOpt === 'function' ? petalWidthOpt(d, i) : petalWidthOpt || r * 0.45;
+
+      const path = petalPath(r, pw);
 
       // Clamp petal count to a reasonable range
       const count = Math.max(0, Math.min(n, 24));
@@ -110,7 +126,7 @@
 
       // Center pistil
       g.append('circle')
-        .attr('r', centerRadius)
+        .attr('r', cr)
         .attr('fill', c)
         .attr('fill-opacity', Math.min(1, opacity + 0.4))
         .attr('stroke', sc)
@@ -133,7 +149,9 @@
     if (typeof chroma !== 'undefined') {
       try {
         return chroma(color).darken(1.5).hex();
-      } catch (_) { /* fall through */ }
+      } catch {
+        /* fall through */
+      }
     }
     // Fallback: parse hex and reduce brightness
     const hex = color.replace('#', '');
@@ -152,5 +170,4 @@
     petalPath,
     darkenColor,
   };
-
-}));
+});

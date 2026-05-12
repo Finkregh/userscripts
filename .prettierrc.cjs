@@ -8,5 +8,5 @@ module.exports = {
   useTabs: false,
   // Userscript-specific formatting
   bracketSpacing: true,
-  arrowParens: 'avoid'
+  arrowParens: 'avoid',
 };
