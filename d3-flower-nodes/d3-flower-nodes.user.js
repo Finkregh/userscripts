@@ -60,13 +60,13 @@
    *
    * @param {d3.Selection} selection - D3 selection of <g> elements to append flowers into
    * @param {object} opts - Configuration options
-   * @param {function|number} opts.petalCount  - Number of petals (accessor or constant)
-   * @param {function|string} opts.color       - Petal fill color (accessor or constant)
+   * @param {function|number} opts.petalCount    - Number of petals (accessor or constant)
+   * @param {function|string} opts.color         - Petal fill color (accessor or constant)
    * @param {function|string} [opts.strokeColor] - Petal stroke color; if omitted, derived from color
-   * @param {number} [opts.radius=12]          - Petal length (flower radius)
-   * @param {number} [opts.petalWidth]         - Petal width; defaults to radius * 0.45
-   * @param {number} [opts.opacity=0.35]       - Petal fill opacity
-   * @param {number} [opts.centerRadius=3]     - Center circle radius
+   * @param {function|number} [opts.radius=12]   - Petal length (accessor or constant)
+   * @param {function|number} [opts.petalWidth]  - Petal width (accessor or constant); defaults to radius * 0.45
+   * @param {number} [opts.opacity=0.35]         - Petal fill opacity
+   * @param {function|number} [opts.centerRadius=3] - Center circle radius (accessor or constant)
    * @returns {d3.Selection} The input selection (for chaining)
    */
   function createFlowerNode(selection, opts) {
@@ -74,14 +74,11 @@
       petalCount,
       color,
       strokeColor,
-      radius = 12,
-      petalWidth,
+      radius: radiusOpt = 12,
+      petalWidth: petalWidthOpt,
       opacity = 0.35,
-      centerRadius = 3,
+      centerRadius: centerRadiusOpt = 3,
     } = opts || {};
-
-    const pw = petalWidth || radius * 0.45;
-    const path = petalPath(radius, pw);
 
     selection.each(function (d, i) {
       const g = d3.select(this);
@@ -90,6 +87,13 @@
       const sc = typeof strokeColor === 'function'
         ? strokeColor(d, i)
         : (strokeColor || darkenColor(c));
+      const r = typeof radiusOpt === 'function' ? radiusOpt(d, i) : radiusOpt;
+      const cr = typeof centerRadiusOpt === 'function' ? centerRadiusOpt(d, i) : centerRadiusOpt;
+      const pw = typeof petalWidthOpt === 'function'
+        ? petalWidthOpt(d, i)
+        : (petalWidthOpt || r * 0.45);
+
+      const path = petalPath(r, pw);
 
       // Clamp petal count to a reasonable range
       const count = Math.max(0, Math.min(n, 24));
@@ -110,7 +114,7 @@
 
       // Center pistil
       g.append('circle')
-        .attr('r', centerRadius)
+        .attr('r', cr)
         .attr('fill', c)
         .attr('fill-opacity', Math.min(1, opacity + 0.4))
         .attr('stroke', sc)
