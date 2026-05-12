@@ -22,6 +22,6 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Generate release with changelog
-        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/release-with-cog@3.3.0
+        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/release-with-cog@3.3.1
         with:
           cog_changelog_args_pr: '--unified'
