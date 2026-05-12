@@ -25,13 +25,13 @@ export function loadScript(opts = {}) {
 
   // Minimal d3 stub that tracks appended elements
   const d3Stub = opts.d3 || {
-    select: (el) => createChainable(el),
+    select: el => createChainable(el),
   };
 
   const sandbox = {
     globalThis: {},
     console,
-    require: (name) => {
+    require: name => {
       if (name === 'd3') return d3Stub;
       throw new Error(`Unexpected require: ${name}`);
     },
@@ -57,25 +57,44 @@ export function createChainable(element) {
   const obj = {
     appended,
     attrs,
-    append: (tag) => {
+    append: tag => {
       const child = { tag, attrs: {} };
       appended.push(child);
       const childObj = {
-        attr: (k, v) => { child.attrs[k] = v; return childObj; },
+        attr: (k, v) => {
+          child.attrs[k] = v;
+          return childObj;
+        },
       };
       return childObj;
     },
-    attr: (k, v) => { attrs[k] = v; return obj; },
-    each: (fn) => {
+    attr: (k, v) => {
+      attrs[k] = v;
+      return obj;
+    },
+    each: fn => {
       if (element && Array.isArray(element)) {
-        element.forEach((d, i) => fn.call({ __mock: true, _appended: [], append: (tag) => {
-          const child = { tag, attrs: {} };
-          appended.push(child);
-          const childObj = {
-            attr: (k, v) => { child.attrs[k] = v; return childObj; },
-          };
-          return childObj;
-        } }, d, i));
+        element.forEach((d, i) =>
+          fn.call(
+            {
+              __mock: true,
+              _appended: [],
+              append: tag => {
+                const child = { tag, attrs: {} };
+                appended.push(child);
+                const childObj = {
+                  attr: (k, v) => {
+                    child.attrs[k] = v;
+                    return childObj;
+                  },
+                };
+                return childObj;
+              },
+            },
+            d,
+            i
+          )
+        );
       }
       return obj;
     },

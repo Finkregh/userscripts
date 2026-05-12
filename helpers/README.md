@@ -29,9 +29,9 @@ logger.setLevel('debug');
 
 #### `createLogger(opts?)`
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `prefix` | `string` | `''` | Prefix prepended to all messages |
+| Option     | Type     | Default  | Description                                     |
+| ---------- | -------- | -------- | ----------------------------------------------- |
+| `prefix`   | `string` | `''`     | Prefix prepended to all messages                |
 | `logLevel` | `string` | `'warn'` | Initial level: `none\|error\|warn\|info\|debug` |
 
 Returns a logger with `debug`, `info`, `warn`, `error`, `setLevel(level)`, and `getLevel()`.
@@ -61,12 +61,12 @@ const data = await resp.json();
 
 #### `fetchRetry(url, opts?)`
 
-| Option | Type | Default | Description |
-| ------ | ---- | ------- | ----------- |
-| `credentials` | `string` | `'same-origin'` | Fetch credentials mode |
-| `maxRetries` | `number` | `3` | Maximum retry attempts |
-| `maxDelayMs` | `number` | `5000` | Cap on exponential backoff delay |
-| `onRetry` | `function` | - | `(attempt, error, delayMs)` callback |
+| Option        | Type       | Default         | Description                          |
+| ------------- | ---------- | --------------- | ------------------------------------ |
+| `credentials` | `string`   | `'same-origin'` | Fetch credentials mode               |
+| `maxRetries`  | `number`   | `3`             | Maximum retry attempts               |
+| `maxDelayMs`  | `number`   | `5000`          | Cap on exponential backoff delay     |
+| `onRetry`     | `function` | -               | `(attempt, error, delayMs)` callback |
 
 All other options are passed through to `fetch()`.
 

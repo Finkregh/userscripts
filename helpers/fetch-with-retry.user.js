@@ -66,7 +66,7 @@
         if (attempt < maxRetries) {
           const delayMs = Math.min(1000 * Math.pow(2, attempt), maxDelayMs);
           if (onRetry) onRetry(attempt + 1, err, delayMs);
-          await new Promise((resolve) => setTimeout(resolve, delayMs));
+          await new Promise(resolve => setTimeout(resolve, delayMs));
         }
       }
     }

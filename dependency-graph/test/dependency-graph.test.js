@@ -84,7 +84,10 @@ describe('minimizeCrossings', () => {
     // c1 has parent p2 (position 1), c2 has parent p1 (position 0)
     const c1 = { parent: p2 };
     const c2 = { parent: p1 };
-    const levels = [[p1, p2], [c1, c2]];
+    const levels = [
+      [p1, p2],
+      [c1, c2],
+    ];
 
     const result = minimizeCrossings(levels);
     // c2 (parent at pos 0) should come before c1 (parent at pos 1)
@@ -125,9 +128,9 @@ describe('assignBranchColors', () => {
       ],
     };
     assignBranchColors(root, { chroma: chromaStub });
-    const colors = root.children.map((c) => c.data.branchColor);
+    const colors = root.children.map(c => c.data.branchColor);
     // All children should have colors assigned
-    expect(colors.every((c) => c !== undefined)).toBe(true);
+    expect(colors.every(c => c !== undefined)).toBe(true);
     // All children should have different colors
     expect(new Set(colors).size).toBe(3);
   });

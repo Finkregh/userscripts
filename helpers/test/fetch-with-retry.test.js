@@ -80,9 +80,9 @@ describe('fetch-with-retry', () => {
     mockFetch.mockRejectedValue(new Error('always fails'));
     const { fetchRetry } = loadWithFetch(mockFetch);
 
-    await expect(
-      fetchRetry('https://example.com/api', { maxRetries: 2 })
-    ).rejects.toThrow('always fails');
+    await expect(fetchRetry('https://example.com/api', { maxRetries: 2 })).rejects.toThrow(
+      'always fails'
+    );
     expect(mockFetch).toHaveBeenCalledTimes(3); // initial + 2 retries
   });
 

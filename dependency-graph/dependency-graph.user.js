@@ -153,8 +153,7 @@
             if (c.parent === n) childIndices.push(nodeYIndex.get(c) ?? 0);
           }
           if (childIndices.length > 0) {
-            n._barycenter =
-              childIndices.reduce((s, v) => s + v, 0) / childIndices.length;
+            n._barycenter = childIndices.reduce((s, v) => s + v, 0) / childIndices.length;
           } else {
             n._barycenter = nodeYIndex.get(n) ?? 0;
           }
@@ -173,12 +172,8 @@
         for (let i = 0; i < nodes.length - 1; i++) {
           const a = nodes[i],
             b = nodes[i + 1];
-          const aP =
-            a.parent && nodeYIndex.has(a.parent) ? nodeYIndex.get(a.parent) : i;
-          const bP =
-            b.parent && nodeYIndex.has(b.parent)
-              ? nodeYIndex.get(b.parent)
-              : i + 1;
+          const aP = a.parent && nodeYIndex.has(a.parent) ? nodeYIndex.get(a.parent) : i;
+          const bP = b.parent && nodeYIndex.has(b.parent) ? nodeYIndex.get(b.parent) : i + 1;
           if (aP > bP) {
             nodes[i] = b;
             nodes[i + 1] = a;
@@ -272,13 +267,13 @@
     const { minRatio = 0.2, maxRatio = 0.8, onResize } = opts || {};
     let dragging = false;
 
-    const onMouseDown = (e) => {
+    const onMouseDown = e => {
       e.preventDefault();
       dragging = true;
       document.body.style.cursor = 'col-resize';
     };
 
-    const onMouseMove = (e) => {
+    const onMouseMove = e => {
       if (!dragging) return;
       const container = leftPane.parentElement;
       const rect = container.getBoundingClientRect();

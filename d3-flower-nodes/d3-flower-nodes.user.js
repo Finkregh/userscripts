@@ -33,7 +33,7 @@
   } else {
     root.d3FlowerNodes = factory(root.d3);
   }
-}(typeof globalThis !== 'undefined' ? globalThis : this, function (d3) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function (d3) {
   'use strict';
 
   /**
@@ -48,9 +48,23 @@
     const hw = width / 2;
     // Cubic bezier petal shape: narrow base, widens in middle, pointed tip
     return [
-      'M', 0, 0,
-      'C', hw, -length * 0.3, hw, -length * 0.7, 0, -length,
-      'C', -hw, -length * 0.7, -hw, -length * 0.3, 0, 0,
+      'M',
+      0,
+      0,
+      'C',
+      hw,
+      -length * 0.3,
+      hw,
+      -length * 0.7,
+      0,
+      -length,
+      'C',
+      -hw,
+      -length * 0.7,
+      -hw,
+      -length * 0.3,
+      0,
+      0,
       'Z',
     ].join(' ');
   }
@@ -82,16 +96,14 @@
 
     selection.each(function (d, i) {
       const g = d3.select(this);
-      const n = typeof petalCount === 'function' ? petalCount(d, i) : (petalCount || 0);
-      const c = typeof color === 'function' ? color(d, i) : (color || '#888');
-      const sc = typeof strokeColor === 'function'
-        ? strokeColor(d, i)
-        : (strokeColor || darkenColor(c));
+      const n = typeof petalCount === 'function' ? petalCount(d, i) : petalCount || 0;
+      const c = typeof color === 'function' ? color(d, i) : color || '#888';
+      const sc =
+        typeof strokeColor === 'function' ? strokeColor(d, i) : strokeColor || darkenColor(c);
       const r = typeof radiusOpt === 'function' ? radiusOpt(d, i) : radiusOpt;
       const cr = typeof centerRadiusOpt === 'function' ? centerRadiusOpt(d, i) : centerRadiusOpt;
-      const pw = typeof petalWidthOpt === 'function'
-        ? petalWidthOpt(d, i)
-        : (petalWidthOpt || r * 0.45);
+      const pw =
+        typeof petalWidthOpt === 'function' ? petalWidthOpt(d, i) : petalWidthOpt || r * 0.45;
 
       const path = petalPath(r, pw);
 
@@ -137,7 +149,9 @@
     if (typeof chroma !== 'undefined') {
       try {
         return chroma(color).darken(1.5).hex();
-      } catch { /* fall through */ }
+      } catch {
+        /* fall through */
+      }
     }
     // Fallback: parse hex and reduce brightness
     const hex = color.replace('#', '');
@@ -156,5 +170,4 @@
     petalPath,
     darkenColor,
   };
-
-}));
+});

@@ -29,7 +29,8 @@ import { createFlowerNode } from './d3-flower-nodes.user.js';
 ### Basic example
 
 ```js
-const nodes = svg.selectAll('g.node')
+const nodes = svg
+  .selectAll('g.node')
   .data(data)
   .join('g')
   .attr('class', 'node')
