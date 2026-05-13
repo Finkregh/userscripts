@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## d3-flower-nodes-v0.2.0 - 2026-05-13
+#### Features
+- (**d3-flower-nodes**) more optional randomness - (bfdbee5) - Oluf Lorenzen
+- (**d3-flower-nodes**) generate random flowers, add color params - (e1f458f) - Oluf Lorenzen
+#### Bug Fixes
+- proper raw github references - (a6612fb) - Oluf Lorenzen
+
+- - -
+
 ## d3-flower-nodes-v0.1.0 - 2026-05-12
 #### Features
 - (**d3-flower-nodes**) cleanup params - (657e615) - Oluf Lorenzen

@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/e68941e75902af24dc41b6b44eeec7beaa2fd224..v0.2.0) - 2026-05-13
+### Package updates
+- [d3-flower-nodes-v0.2.0](d3-flower-nodes) bumped to [d3-flower-nodes-v0.2.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/d3-flower-nodes-v0.1.0..d3-flower-nodes-v0.2.0)
+- [dependency-graph-v0.1.1](dependency-graph) bumped to [dependency-graph-v0.1.1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/dependency-graph-v0.1.0..dependency-graph-v0.1.1)
+- [helpers-v0.1.1](helpers) bumped to [helpers-v0.1.1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/helpers-v0.1.0..helpers-v0.1.1)
+### Global changes
+#### Features
+- (**d3-flower-nodes**) generate random flowers, add color params - ([e1f458f](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/e1f458f033113fb62f82eba86bd6a28b1e1e82cd)) - Oluf Lorenzen
+#### Bug Fixes
+- proper raw github references - ([a6612fb](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/a6612fbd395a479a8a48baef2007bba09b8ede7c)) - Oluf Lorenzen
+#### Continuous Integration
+- ignore changelog files, test in prek - ([78c73f1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/78c73f1fd21c635ad610bf730657604d235faa27)) - Oluf Lorenzen
+- bump action - ([e68941e](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/e68941e75902af24dc41b6b44eeec7beaa2fd224)) - finkregh
+
+- - -
+
 ## [v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/b50478fe4c7a36320a2ca774662e0d8f986893c0..v0.1.0) - 2026-05-12
 ### Package updates
 - [dependency-graph](dependency-graph) bumped to [dependency-graph-v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/58c2b44c686d4bab140405ef803fd04cf6ce9776..dependency-graph-v0.1.0)
