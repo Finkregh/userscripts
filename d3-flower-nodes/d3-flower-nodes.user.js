@@ -51,6 +51,8 @@
 
   // ─── Random parameter generation ───
 
+  const GOLDEN_ANGLE = 137.508;
+
   function rndBetween(min, max) {
     return min + Math.random() * (max - min);
   }
@@ -72,6 +74,49 @@
     const width = o.width != null ? o.width : length * rndBetween(0.3, 0.7);
 
     return { length, width, curveStart, curveEnd, tipRoundness, baseWidth, asymmetry };
+  }
+
+  /**
+   * Generate a complete random flower configuration (shape + layout).
+   * Unlike randomPetalParams (which only varies the petal shape), this
+   * randomizes petal count, rotation style, growth, jitter, and colors —
+   * producing visually distinct flowers on each call.
+   *
+   * Inspired by bleeptrack's Overflower which uses golden-angle rotation,
+   * progressive petal sizing, and per-petal variation.
+   *
+   * @param {object} [overrides] - Partial config to pin; unset fields are randomized
+   * @returns {object} Full flower config suitable for createFlowerNode opts
+   */
+  function randomFlower(overrides) {
+    const o = overrides || {};
+    const petalCount = o.petalCount != null ? o.petalCount : Math.floor(rndBetween(5, 18));
+    const radius = o.radius != null ? o.radius : rndBetween(10, 25);
+    const centerRadius = o.centerRadius != null ? o.centerRadius : radius * rndBetween(0.15, 0.35);
+    const opacity = o.opacity != null ? o.opacity : rndBetween(0.25, 0.6);
+
+    // Rotation: golden angle produces natural phyllotaxis spirals
+    const useGoldenAngle = o.useGoldenAngle != null ? o.useGoldenAngle : Math.random() > 0.3;
+    // Angular jitter per petal (degrees)
+    const angleJitter = o.angleJitter != null ? o.angleJitter : rndBetween(0, 8);
+    // Progressive growth: later petals grow by this factor (0 = uniform, 1 = double)
+    const growthFactor = o.growthFactor != null ? o.growthFactor : rndBetween(0, 0.6);
+    // Per-petal size jitter (fraction, 0 = uniform, 0.3 = ±30%)
+    const sizeJitter = o.sizeJitter != null ? o.sizeJitter : rndBetween(0, 0.25);
+
+    const petalParams = o.petalParams || randomPetalParams(o.petalParamsOverrides);
+
+    return {
+      petalCount,
+      radius,
+      centerRadius,
+      opacity,
+      petalParams,
+      useGoldenAngle,
+      angleJitter,
+      growthFactor,
+      sizeJitter,
+    };
   }
 
   /**
@@ -170,6 +215,10 @@
    * @param {Array} [opts.strokeColors]             - [startColor, endColor] gradient across petals
    * @param {number} [opts.strokeWidth=0.5]         - Petal stroke width
    * @param {number} [opts.strokeOpacity=1]         - Petal stroke opacity
+   * @param {boolean} [opts.useGoldenAngle=false]   - Use golden angle (~137.5°) instead of even spacing
+   * @param {number} [opts.angleJitter=0]           - Random angular offset per petal (degrees)
+   * @param {number} [opts.growthFactor=0]          - Progressive petal growth (0=uniform, 1=double last)
+   * @param {number} [opts.sizeJitter=0]            - Random per-petal size variation (fraction, e.g. 0.2=±20%)
    * @returns {d3.Selection} The input selection (for chaining)
    */
   function createFlowerNode(selection, opts) {
@@ -187,6 +236,10 @@
       strokeColors,
       strokeWidth: strokeWidthOpt = 0.5,
       strokeOpacity = 1,
+      useGoldenAngle = false,
+      angleJitter = 0,
+      growthFactor = 0,
+      sizeJitter = 0,
     } = opts || {};
 
     selection.each(function (d, i) {
@@ -201,16 +254,29 @@
         typeof petalWidthOpt === 'function' ? petalWidthOpt(d, i) : petalWidthOpt || r * 0.45;
       const pp = typeof petalParamsOpt === 'function' ? petalParamsOpt(d, i) : petalParamsOpt;
 
-      // Build the path: use petalParams if provided, else fallback to length/width
-      const path = pp ? petalPath(Object.assign({ length: r, width: pw }, pp)) : petalPath(r, pw);
-
       const count = Math.max(0, Math.min(n, 24));
       const isLineart = style === 'lineart';
 
       if (count > 0) {
-        const angleStep = 360 / count;
+        const angleStep = useGoldenAngle ? GOLDEN_ANGLE : 360 / count;
         for (let p = 0; p < count; p++) {
           const t = count > 1 ? p / (count - 1) : 0;
+
+          // Progressive growth: later petals are longer (like Overflower's leaveFaktor)
+          const growth = 1 + growthFactor * t;
+          // Per-petal random size jitter
+          const jitter = sizeJitter > 0 ? 1 + (Math.random() * 2 - 1) * sizeJitter : 1;
+          const petalR = r * growth * jitter;
+          const petalW = pw * growth * jitter;
+
+          // Build per-petal path with adjusted size
+          const path = pp
+            ? petalPath(Object.assign({ length: petalR, width: petalW }, pp))
+            : petalPath(petalR, petalW);
+
+          // Angular jitter: small random offset per petal
+          const aJitter = angleJitter > 0 ? (Math.random() * 2 - 1) * angleJitter : 0;
+          const angle = p * angleStep + aJitter;
 
           // Per-petal colors via gradient or uniform
           const fillC = fillColors ? lerpColor(fillColors[0], fillColors[1], t) : c;
@@ -219,7 +285,7 @@
           const petal = g
             .append('path')
             .attr('d', path)
-            .attr('transform', `rotate(${p * angleStep})`)
+            .attr('transform', `rotate(${angle})`)
             .attr('stroke', strokeC)
             .attr('stroke-width', strokeWidthOpt)
             .attr('stroke-opacity', strokeOpacity)
@@ -300,8 +366,10 @@
     petalPath,
     darkenColor,
     randomPetalParams,
+    randomFlower,
     getPetalParams,
     lerpColor,
     DEFAULT_PETAL_PARAMS,
+    GOLDEN_ANGLE,
   };
 });

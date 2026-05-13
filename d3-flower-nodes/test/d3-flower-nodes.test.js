@@ -6,8 +6,10 @@ const {
   darkenColor,
   createFlowerNode,
   randomPetalParams,
+  randomFlower,
   lerpColor,
   DEFAULT_PETAL_PARAMS,
+  GOLDEN_ANGLE,
 } = loadScript();
 
 describe('petalPath', () => {
@@ -253,6 +255,79 @@ describe('DEFAULT_PETAL_PARAMS', () => {
     expect(DEFAULT_PETAL_PARAMS.tipRoundness).toBe(0);
     expect(DEFAULT_PETAL_PARAMS.baseWidth).toBe(0);
     expect(DEFAULT_PETAL_PARAMS.asymmetry).toBe(0);
+  });
+});
+
+describe('GOLDEN_ANGLE', () => {
+  it('is approximately 137.508 degrees', () => {
+    expect(GOLDEN_ANGLE).toBeCloseTo(137.508, 2);
+  });
+});
+
+describe('randomFlower', () => {
+  it('returns a complete flower configuration', () => {
+    const flower = randomFlower();
+    expect(flower).toHaveProperty('petalCount');
+    expect(flower).toHaveProperty('radius');
+    expect(flower).toHaveProperty('centerRadius');
+    expect(flower).toHaveProperty('opacity');
+    expect(flower).toHaveProperty('petalParams');
+    expect(flower).toHaveProperty('useGoldenAngle');
+    expect(flower).toHaveProperty('angleJitter');
+    expect(flower).toHaveProperty('growthFactor');
+    expect(flower).toHaveProperty('sizeJitter');
+  });
+
+  it('generates different flowers on successive calls', () => {
+    const a = randomFlower();
+    const b = randomFlower();
+    const aStr = JSON.stringify(a);
+    const bStr = JSON.stringify(b);
+    expect(aStr).not.toBe(bStr);
+  });
+
+  it('respects overrides while randomizing the rest', () => {
+    const flower = randomFlower({ petalCount: 7, radius: 15 });
+    expect(flower.petalCount).toBe(7);
+    expect(flower.radius).toBe(15);
+    expect(flower.petalParams).toBeDefined();
+    expect(flower.growthFactor).toBeGreaterThanOrEqual(0);
+  });
+
+  it('produces petal counts in expected range', () => {
+    for (let i = 0; i < 50; i++) {
+      const f = randomFlower();
+      expect(f.petalCount).toBeGreaterThanOrEqual(5);
+      expect(f.petalCount).toBeLessThanOrEqual(17);
+      expect(Number.isInteger(f.petalCount)).toBe(true);
+    }
+  });
+
+  it('produces values within expected ranges', () => {
+    for (let i = 0; i < 50; i++) {
+      const f = randomFlower();
+      expect(f.radius).toBeGreaterThanOrEqual(10);
+      expect(f.radius).toBeLessThanOrEqual(25);
+      expect(f.opacity).toBeGreaterThanOrEqual(0.25);
+      expect(f.opacity).toBeLessThanOrEqual(0.6);
+      expect(f.growthFactor).toBeGreaterThanOrEqual(0);
+      expect(f.growthFactor).toBeLessThanOrEqual(0.6);
+      expect(f.sizeJitter).toBeGreaterThanOrEqual(0);
+      expect(f.sizeJitter).toBeLessThanOrEqual(0.25);
+      expect(f.angleJitter).toBeGreaterThanOrEqual(0);
+      expect(f.angleJitter).toBeLessThanOrEqual(8);
+    }
+  });
+
+  it('passes petalParamsOverrides through to randomPetalParams', () => {
+    const flower = randomFlower({ petalParamsOverrides: { length: 99 } });
+    expect(flower.petalParams.length).toBe(99);
+  });
+
+  it('uses explicit petalParams when provided', () => {
+    const pp = { length: 10, width: 5, curveStart: 0.3, curveEnd: 0.7, tipRoundness: 0, baseWidth: 0, asymmetry: 0 };
+    const flower = randomFlower({ petalParams: pp });
+    expect(flower.petalParams).toBe(pp);
   });
 });
 
