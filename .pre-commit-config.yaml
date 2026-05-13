@@ -36,6 +36,16 @@ repos:
       - id: mixed-line-ending
         args: [--fix=lf]
 
+  # Unit tests
+  - repo: local
+    hooks:
+      - id: vitest
+        name: Run unit tests
+        entry: npx vitest run
+        language: system
+        files: \.(js|ts)$
+        pass_filenames: false
+
   # Userscript specific checks
   - repo: local
     hooks:
