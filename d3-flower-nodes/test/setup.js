@@ -1,13 +1,16 @@
 /**
  * Test setup: loads d3-flower-nodes UMD script in a sandboxed VM context
- * with a minimal d3 stub.
+ * with a minimal d3 stub and chroma-js.
  */
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import vm from 'node:vm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const chroma = require('chroma-js');
 
 /**
  * Load the d3-flower-nodes script with a d3 stub.
@@ -38,7 +41,7 @@ export function loadScript(opts = {}) {
     module,
     exports,
     define: undefined,
-    chroma: undefined,
+    chroma,
   };
 
   const context = vm.createContext(sandbox);

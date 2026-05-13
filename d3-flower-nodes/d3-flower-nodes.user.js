@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         d3-flower-nodes
 // @namespace    https://github.com/Finkregh/userscripts
-// @version      1.0.0
-// @description  SVG flower petal nodes for D3.js graphs — petal count encodes data values
+// @version      2.0.0
+// @description  SVG flower petal nodes for D3.js graphs — parametric petals, random generation, overflower-style colors
 // @author       Finkregh
 // @license      MIT
 // @updateURL    https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/d3-flower-nodes/d3-flower-nodes.user.js
 // @downloadURL  https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/d3-flower-nodes/d3-flower-nodes.user.js
+// @require      https://unpkg.com/chroma-js@3.2.0/dist/chroma.min.cjs
 // @grant        none
 // ==/UserScript==
 
@@ -36,37 +37,119 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (d3) {
   'use strict';
 
+  // ─── Petal shape defaults (backward-compatible with original hardcoded values) ───
+
+  const DEFAULT_PETAL_PARAMS = {
+    length: 12,
+    width: null,
+    curveStart: 0.3,
+    curveEnd: 0.7,
+    tipRoundness: 0,
+    baseWidth: 0,
+    asymmetry: 0,
+  };
+
+  // ─── Random parameter generation ───
+
+  function rndBetween(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  /**
+   * Generate random petal shape parameters.
+   *
+   * @param {object} [overrides] - Partial params to pin; unset fields are randomized
+   * @returns {object} Complete petal parameter set
+   */
+  function randomPetalParams(overrides) {
+    const o = overrides || {};
+    const length = o.length != null ? o.length : rndBetween(8, 20);
+    const curveStart = o.curveStart != null ? o.curveStart : rndBetween(0.15, 0.45);
+    const curveEnd = o.curveEnd != null ? o.curveEnd : rndBetween(0.55, 0.85);
+    const tipRoundness = o.tipRoundness != null ? o.tipRoundness : rndBetween(0, 0.6);
+    const baseWidth = o.baseWidth != null ? o.baseWidth : rndBetween(0, 0.4);
+    const asymmetry = o.asymmetry != null ? o.asymmetry : rndBetween(-0.3, 0.3);
+    const width = o.width != null ? o.width : length * rndBetween(0.3, 0.7);
+
+    return { length, width, curveStart, curveEnd, tipRoundness, baseWidth, asymmetry };
+  }
+
   /**
    * Generate an SVG path string for a single petal.
-   * The petal is oriented pointing upward (along negative Y) from origin.
+   * Accepts either (length, width) for backward compatibility,
+   * or a params object for full control.
    *
-   * @param {number} length - Petal length (tip distance from center)
-   * @param {number} width  - Max petal width at widest point
+   * @param {number|object} lengthOrParams - Petal length, or a petalParams object
+   * @param {number} [width] - Max petal width (ignored if first arg is object)
    * @returns {string} SVG path data
    */
-  function petalPath(length, width) {
-    const hw = width / 2;
-    // Cubic bezier petal shape: narrow base, widens in middle, pointed tip
+  function petalPath(lengthOrParams, width) {
+    let p;
+    if (typeof lengthOrParams === 'object' && lengthOrParams !== null) {
+      p = Object.assign({}, DEFAULT_PETAL_PARAMS, lengthOrParams);
+      if (p.width == null) p.width = p.length * 0.45;
+    } else {
+      p = Object.assign({}, DEFAULT_PETAL_PARAMS, {
+        length: lengthOrParams,
+        width: width,
+      });
+    }
+
+    const len = p.length;
+    const hw = p.width / 2;
+    const baseHw = hw * p.baseWidth;
+    const tipOffset = hw * p.asymmetry;
+
+    // tipRoundness: 0 = original bulging shape (control points at hw), 1 = pointed (control points at 0)
+    const tipCpX = hw * (1 - p.tipRoundness);
+
+    // Right side control points
+    const rc1x = hw;
+    const rc1y = -len * p.curveStart;
+    const rc2x = tipCpX + tipOffset;
+    const rc2y = -len * p.curveEnd;
+
+    // Left side control points (mirror with asymmetry)
+    const lc1x = -(tipCpX - tipOffset);
+    const lc1y = -len * p.curveEnd;
+    const lc2x = -hw;
+    const lc2y = -len * p.curveStart;
+
+    const tipX = tipOffset;
+    const tipY = -len;
+
     return [
       'M',
-      0,
+      baseHw,
       0,
       'C',
-      hw,
-      -length * 0.3,
-      hw,
-      -length * 0.7,
-      0,
-      -length,
+      rc1x,
+      rc1y,
+      rc2x,
+      rc2y,
+      tipX,
+      tipY,
       'C',
-      -hw,
-      -length * 0.7,
-      -hw,
-      -length * 0.3,
-      0,
+      lc1x,
+      lc1y,
+      lc2x,
+      lc2y,
+      -baseHw,
       0,
       'Z',
     ].join(' ');
+  }
+
+  /**
+   * Interpolate between two colors.
+   *
+   * @param {string} color1 - Start color (any CSS color string)
+   * @param {string} color2 - End color (any CSS color string)
+   * @param {number} t - Interpolation factor 0–1
+   * @returns {string} Interpolated hex color
+   */
+  function lerpColor(color1, color2, t) {
+    return chroma.mix(color1, color2, t, 'lab').hex();
   }
 
   /**
@@ -74,13 +157,19 @@
    *
    * @param {d3.Selection} selection - D3 selection of <g> elements to append flowers into
    * @param {object} opts - Configuration options
-   * @param {function|number} opts.petalCount    - Number of petals (accessor or constant)
-   * @param {function|string} opts.color         - Petal fill color (accessor or constant)
-   * @param {function|string} [opts.strokeColor] - Petal stroke color; if omitted, derived from color
-   * @param {function|number} [opts.radius=12]   - Petal length (accessor or constant)
-   * @param {function|number} [opts.petalWidth]  - Petal width (accessor or constant); defaults to radius * 0.45
-   * @param {number} [opts.opacity=0.35]         - Petal fill opacity
+   * @param {function|number} opts.petalCount       - Number of petals (accessor or constant)
+   * @param {function|string} opts.color            - Petal fill color (accessor or constant)
+   * @param {function|string} [opts.strokeColor]    - Petal stroke color; if omitted, derived from color
+   * @param {function|number} [opts.radius=12]      - Petal length (accessor or constant)
+   * @param {function|number} [opts.petalWidth]     - Petal width; defaults to radius * 0.45
+   * @param {number} [opts.opacity=0.35]            - Petal fill opacity
    * @param {function|number} [opts.centerRadius=3] - Center circle radius (accessor or constant)
+   * @param {object} [opts.petalParams]             - Explicit petal shape params (from randomPetalParams)
+   * @param {string} [opts.style='colored']         - 'colored' (fill+stroke) or 'lineart' (stroke only)
+   * @param {Array} [opts.fillColors]               - [startColor, endColor] gradient across petals
+   * @param {Array} [opts.strokeColors]             - [startColor, endColor] gradient across petals
+   * @param {number} [opts.strokeWidth=0.5]         - Petal stroke width
+   * @param {number} [opts.strokeOpacity=1]         - Petal stroke opacity
    * @returns {d3.Selection} The input selection (for chaining)
    */
   function createFlowerNode(selection, opts) {
@@ -92,6 +181,12 @@
       petalWidth: petalWidthOpt,
       opacity = 0.35,
       centerRadius: centerRadiusOpt = 3,
+      petalParams: petalParamsOpt,
+      style = 'colored',
+      fillColors,
+      strokeColors,
+      strokeWidth: strokeWidthOpt = 0.5,
+      strokeOpacity = 1,
     } = opts || {};
 
     selection.each(function (d, i) {
@@ -104,64 +199,99 @@
       const cr = typeof centerRadiusOpt === 'function' ? centerRadiusOpt(d, i) : centerRadiusOpt;
       const pw =
         typeof petalWidthOpt === 'function' ? petalWidthOpt(d, i) : petalWidthOpt || r * 0.45;
+      const pp = typeof petalParamsOpt === 'function' ? petalParamsOpt(d, i) : petalParamsOpt;
 
-      const path = petalPath(r, pw);
+      // Build the path: use petalParams if provided, else fallback to length/width
+      const path = pp ? petalPath(Object.assign({ length: r, width: pw }, pp)) : petalPath(r, pw);
 
-      // Clamp petal count to a reasonable range
       const count = Math.max(0, Math.min(n, 24));
+      const isLineart = style === 'lineart';
 
       if (count > 0) {
         const angleStep = 360 / count;
         for (let p = 0; p < count; p++) {
-          g.append('path')
+          const t = count > 1 ? p / (count - 1) : 0;
+
+          // Per-petal colors via gradient or uniform
+          const fillC = fillColors ? lerpColor(fillColors[0], fillColors[1], t) : c;
+          const strokeC = strokeColors ? lerpColor(strokeColors[0], strokeColors[1], t) : sc;
+
+          const petal = g
+            .append('path')
             .attr('d', path)
             .attr('transform', `rotate(${p * angleStep})`)
-            .attr('fill', c)
-            .attr('fill-opacity', opacity)
-            .attr('stroke', sc)
-            .attr('stroke-width', 0.5)
+            .attr('stroke', strokeC)
+            .attr('stroke-width', strokeWidthOpt)
+            .attr('stroke-opacity', strokeOpacity)
             .attr('class', 'flower-petal');
+
+          if (isLineart) {
+            petal.attr('fill', 'none');
+          } else {
+            petal.attr('fill', fillC).attr('fill-opacity', opacity);
+          }
         }
       }
 
       // Center pistil
-      g.append('circle')
+      const center = g
+        .append('circle')
         .attr('r', cr)
-        .attr('fill', c)
-        .attr('fill-opacity', Math.min(1, opacity + 0.4))
         .attr('stroke', sc)
-        .attr('stroke-width', 0.5)
+        .attr('stroke-width', strokeWidthOpt)
         .attr('class', 'flower-center');
+
+      if (isLineart) {
+        center.attr('fill', 'none');
+      } else {
+        center
+          .attr('fill', fillColors ? fillColors[0] : c)
+          .attr('fill-opacity', Math.min(1, opacity + 0.4));
+      }
+
+      // Store params as data attribute for extraction
+      const storedParams = pp || {
+        length: r,
+        width: pw,
+        curveStart: 0.3,
+        curveEnd: 0.7,
+        tipRoundness: 0,
+        baseWidth: 0,
+        asymmetry: 0,
+      };
+      g.attr('data-petal-params', JSON.stringify(storedParams));
     });
 
     return selection;
   }
 
   /**
-   * Darken a hex/named color for use as stroke.
-   * Uses simple luminance reduction if chroma.js is not available.
+   * Extract petal parameters from a flower node that was created with createFlowerNode.
    *
-   * @param {string} color - CSS color string
-   * @returns {string} Darkened color
+   * @param {d3.Selection|Element} nodeOrSelection - A <g> element or D3 selection containing a flower
+   * @returns {object|null} The petal parameters, or null if not found
+   */
+  function getPetalParams(nodeOrSelection) {
+    const el = nodeOrSelection.node ? nodeOrSelection.node() : nodeOrSelection;
+    const raw = el.getAttribute('data-petal-params');
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Darken a color for use as stroke.
+   *
+   * @param {string} color - Any CSS color string
+   * @returns {string} Darkened hex color
    */
   function darkenColor(color) {
-    // Prefer chroma.js if available globally
-    if (typeof chroma !== 'undefined') {
-      try {
-        return chroma(color).darken(1.5).hex();
-      } catch {
-        /* fall through */
-      }
-    }
-    // Fallback: parse hex and reduce brightness
-    const hex = color.replace('#', '');
-    if (hex.length === 6) {
-      const r = Math.max(0, parseInt(hex.slice(0, 2), 16) - 60);
-      const g = Math.max(0, parseInt(hex.slice(2, 4), 16) - 60);
-      const b = Math.max(0, parseInt(hex.slice(4, 6), 16) - 60);
-      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-    }
-    return color;
+    return chroma(color || '#000')
+      .darken(1.5)
+      .hex();
   }
 
   // Public API
@@ -169,5 +299,9 @@
     createFlowerNode,
     petalPath,
     darkenColor,
+    randomPetalParams,
+    getPetalParams,
+    lerpColor,
+    DEFAULT_PETAL_PARAMS,
   };
 });
