@@ -5,8 +5,8 @@
 // @description  Fetch wrapper with exponential backoff retry for transient network errors
 // @author       Finkregh
 // @license      MIT
-// @updateURL    https://github.com/Finkregh/userscripts/raw/main/helpers/fetch-with-retry.user.js
-// @downloadURL  https://github.com/Finkregh/userscripts/raw/main/helpers/fetch-with-retry.user.js
+// @updateURL    https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/helpers/fetch-with-retry.user.js
+// @downloadURL  https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/helpers/fetch-with-retry.user.js
 // @grant        none
 // ==/UserScript==
 

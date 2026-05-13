@@ -5,8 +5,8 @@
 // @description  Graph layout utilities — AABB collision resolver, barycenter crossing minimizer, branch color assigner, and split-pane resizer
 // @author       Finkregh
 // @license      MIT
-// @updateURL    https://github.com/Finkregh/userscripts/raw/main/dependency-graph/dependency-graph.user.js
-// @downloadURL  https://github.com/Finkregh/userscripts/raw/main/dependency-graph/dependency-graph.user.js
+// @updateURL    https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/dependency-graph/dependency-graph.user.js
+// @downloadURL  https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/dependency-graph/dependency-graph.user.js
 // @grant        none
 // ==/UserScript==
 

@@ -5,8 +5,8 @@
 // @description  SVG flower petal nodes for D3.js graphs — petal count encodes data values
 // @author       Finkregh
 // @license      MIT
-// @updateURL    https://github.com/Finkregh/userscripts/raw/main/d3-flower-nodes/d3-flower-nodes.user.js
-// @downloadURL  https://github.com/Finkregh/userscripts/raw/main/d3-flower-nodes/d3-flower-nodes.user.js
+// @updateURL    https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/d3-flower-nodes/d3-flower-nodes.user.js
+// @downloadURL  https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/d3-flower-nodes/d3-flower-nodes.user.js
 // @grant        none
 // ==/UserScript==
 

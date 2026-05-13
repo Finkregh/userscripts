@@ -5,8 +5,8 @@
 // @description  Configurable console logger with level filtering and prefix support
 // @author       Finkregh
 // @license      MIT
-// @updateURL    https://github.com/Finkregh/userscripts/raw/main/helpers/configurable-logger.user.js
-// @downloadURL  https://github.com/Finkregh/userscripts/raw/main/helpers/configurable-logger.user.js
+// @updateURL    https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/helpers/configurable-logger.user.js
+// @downloadURL  https://raw.githubusercontent.com/Finkregh/userscripts/refs/heads/main/helpers/configurable-logger.user.js
 // @grant        none
 // ==/UserScript==
 
