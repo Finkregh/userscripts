@@ -325,7 +325,15 @@ describe('randomFlower', () => {
   });
 
   it('uses explicit petalParams when provided', () => {
-    const pp = { length: 10, width: 5, curveStart: 0.3, curveEnd: 0.7, tipRoundness: 0, baseWidth: 0, asymmetry: 0 };
+    const pp = {
+      length: 10,
+      width: 5,
+      curveStart: 0.3,
+      curveEnd: 0.7,
+      tipRoundness: 0,
+      baseWidth: 0,
+      asymmetry: 0,
+    };
     const flower = randomFlower({ petalParams: pp });
     expect(flower.petalParams).toBe(pp);
   });
