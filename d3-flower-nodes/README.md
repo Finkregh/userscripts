@@ -34,11 +34,11 @@ const nodes = svg
   .data(data)
   .join('g')
   .attr('class', 'node')
-  .attr('transform', (d) => `translate(${d.x},${d.y})`);
+  .attr('transform', d => `translate(${d.x},${d.y})`);
 
 createFlowerNode(nodes, {
-  petalCount: (d) => d.children.length,
-  color: (d) => d.color,
+  petalCount: d => d.children.length,
+  color: d => d.color,
   radius: 12,
   opacity: 0.35,
 });
@@ -80,10 +80,10 @@ Appends a flower glyph to each `<g>` element in the D3 selection.
 | `useGoldenAngle` | `boolean`          | `false`         | Use golden angle (~137.5°) instead of even spacing  |
 | `angleJitter`    | `number`           | `0`             | Random angular offset per petal (degrees)           |
 | `growthFactor`   | `number`           | `0`             | Progressive petal sizing (0=uniform, 1=double last) |
-| `sizeJitter`     | `number`           | `0`             | Random per-petal size variation (e.g. 0.2 = ±20%)  |
+| `sizeJitter`     | `number`           | `0`             | Random per-petal size variation (e.g. 0.2 = ±20%)   |
 | `fillColors`     | `[string, string]` | —               | Start/end color gradient across petals              |
 | `strokeColors`   | `[string, string]` | —               | Start/end stroke gradient across petals             |
-| `style`          | `string`           | `'colored'`     | `'colored'` (fill+stroke) or `'lineart'` (no fill) |
+| `style`          | `string`           | `'colored'`     | `'colored'` (fill+stroke) or `'lineart'` (no fill)  |
 
 Returns the input selection for chaining.
 
@@ -91,17 +91,17 @@ Returns the input selection for chaining.
 
 Generates a complete random flower configuration including petal count, shape, rotation style, growth, and jitter. Returns an object suitable as `createFlowerNode` options.
 
-| Key              | Range / Default   | Description                           |
-| ---------------- | ----------------- | ------------------------------------- |
-| `petalCount`     | 5–17              | Number of petals                      |
-| `radius`         | 10–25             | Overall flower radius                 |
-| `centerRadius`   | 15–35% of radius  | Pistil size                           |
-| `opacity`        | 0.25–0.6          | Fill opacity                          |
-| `useGoldenAngle` | true ~70%         | Golden angle creates natural spiral   |
-| `angleJitter`    | 0–8°              | Per-petal angular offset              |
-| `growthFactor`   | 0–0.6             | Inner petals short, outer petals long |
-| `sizeJitter`     | 0–0.25            | Per-petal random size variation       |
-| `petalParams`    | random            | Shape params (via `randomPetalParams`) |
+| Key              | Range / Default  | Description                            |
+| ---------------- | ---------------- | -------------------------------------- |
+| `petalCount`     | 5–17             | Number of petals                       |
+| `radius`         | 10–25            | Overall flower radius                  |
+| `centerRadius`   | 15–35% of radius | Pistil size                            |
+| `opacity`        | 0.25–0.6         | Fill opacity                           |
+| `useGoldenAngle` | true ~70%        | Golden angle creates natural spiral    |
+| `angleJitter`    | 0–8°             | Per-petal angular offset               |
+| `growthFactor`   | 0–0.6            | Inner petals short, outer petals long  |
+| `sizeJitter`     | 0–0.25           | Per-petal random size variation        |
+| `petalParams`    | random           | Shape params (via `randomPetalParams`) |
 
 ### `randomPetalParams(overrides?)`
 

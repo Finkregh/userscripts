@@ -1,35 +1,55 @@
 # Changelog
+
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+
 ## [v0.2.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/e68941e75902af24dc41b6b44eeec7beaa2fd224..v0.2.0) - 2026-05-13
+
 ### Package updates
+
 - [d3-flower-nodes-v0.2.0](d3-flower-nodes) bumped to [d3-flower-nodes-v0.2.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/d3-flower-nodes-v0.1.0..d3-flower-nodes-v0.2.0)
 - [dependency-graph-v0.1.1](dependency-graph) bumped to [dependency-graph-v0.1.1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/dependency-graph-v0.1.0..dependency-graph-v0.1.1)
 - [helpers-v0.1.1](helpers) bumped to [helpers-v0.1.1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/helpers-v0.1.0..helpers-v0.1.1)
+
 ### Global changes
+
 #### Features
+
 - (**d3-flower-nodes**) generate random flowers, add color params - ([e1f458f](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/e1f458f033113fb62f82eba86bd6a28b1e1e82cd)) - Oluf Lorenzen
+
 #### Bug Fixes
+
 - proper raw github references - ([a6612fb](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/a6612fbd395a479a8a48baef2007bba09b8ede7c)) - Oluf Lorenzen
+
 #### Continuous Integration
+
 - ignore changelog files, test in prek - ([78c73f1](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/78c73f1fd21c635ad610bf730657604d235faa27)) - Oluf Lorenzen
 - bump action - ([e68941e](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/e68941e75902af24dc41b6b44eeec7beaa2fd224)) - finkregh
 
 - - -
 
 ## [v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/b50478fe4c7a36320a2ca774662e0d8f986893c0..v0.1.0) - 2026-05-12
+
 ### Package updates
+
 - [dependency-graph](dependency-graph) bumped to [dependency-graph-v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/58c2b44c686d4bab140405ef803fd04cf6ce9776..dependency-graph-v0.1.0)
 - [d3-flower-nodes](d3-flower-nodes) bumped to [d3-flower-nodes-v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/58c2b44c686d4bab140405ef803fd04cf6ce9776..d3-flower-nodes-v0.1.0)
 - [helpers](helpers) bumped to [helpers-v0.1.0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/compare/58c2b44c686d4bab140405ef803fd04cf6ce9776..helpers-v0.1.0)
+
 ### Global changes
+
 #### Features
+
 - tests, CI, etc. - ([b50478f](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/b50478fe4c7a36320a2ca774662e0d8f986893c0)) - Oluf Lorenzen
+
 #### Continuous Integration
+
 - unified changelog in PR - ([85b1a7e](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/85b1a7eeb9cf9a840dfd7482daf0f6221431ec71)) - finkregh
 - debug - ([9261493](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/926149358e81c490811d21a620b1a418fd5ddaec)) - Oluf Lorenzen
+
 #### Miscellaneous Chores
+
 - changes from ci - ([af7af05](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/af7af05330ba2c0323bed8fc58f8d69e2f2c3fb8)) - finkregh
 - autoformatting - ([9d4cba0](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/9d4cba04b76e28de792e9e1557c71925d45a471c)) - Oluf Lorenzen
 - fix linter - ([733eada](https://https://git.h.oluflorenzen.de/finkregh/userscripts/commit/733eadae7ff5c72dcccf0da2d3c2187b80759db2)) - Oluf Lorenzen

@@ -1,18 +1,26 @@
 # Changelog
+
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+
 ## helpers-v0.1.1 - 2026-05-13
+
 #### Bug Fixes
+
 - proper raw github references - (a6612fb) - Oluf Lorenzen
 
 - - -
 
 ## helpers-v0.1.0 - 2026-05-12
+
 #### Features
+
 - tests, CI, etc. - (b50478f) - Oluf Lorenzen
 - hello - (58c2b44) - Oluf Lorenzen
+
 #### Miscellaneous Chores
+
 - autoformatting - (9d4cba0) - Oluf Lorenzen
 
 - - -
