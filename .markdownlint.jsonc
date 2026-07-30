@@ -1,4 +1,4 @@
 {
-  "ignores": ["CHANGELOG.md"],
+  "ignores": ["**/CHANGELOG.md"],
   "MD013": false,
 }
