@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## d3-flower-nodes-v0.2.1 - 2026-07-29
+#### Miscellaneous Chores
+- changes from ci - (ef05ac8) - renovate-forgejo
+
+- - -
+
 
 ## d3-flower-nodes-v0.2.0 - 2026-05-13
 
