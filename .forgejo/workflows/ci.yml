@@ -14,19 +14,19 @@ jobs:
         id: extract_branch
 
       - name: Checkout
-        uses: https://code.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: https://code.forgejo.org/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v7
         with:
           fetch-depth: 1
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Prettier + Markdownlint
-        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/prettier-markdown@f44f30a0f1b34eaf5faec16f1bd796b3a12c71fe # 3.4.1
+        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/prettier-markdown@b1d149f219f64545d9e1a14953269769a1dc2267 # 3.4.2
 
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: https://code.forgejo.org/actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: https://code.forgejo.org/actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v7
 
       - name: Setup Node.js
         uses: https://code.forgejo.org/actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
