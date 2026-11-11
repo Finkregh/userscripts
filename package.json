@@ -10,7 +10,7 @@
     "chroma-js": "3.3.0",
     "eslint": "10.14.0",
     "globals": "17.14.0",
-    "prettier": "3.9.10",
+    "prettier": "3.10.0",
     "prettier-plugin-merge": "0.10.2",
     "prettier-plugin-sh": "0.20.2",
     "prettier-plugin-toml": "4.1.0",
