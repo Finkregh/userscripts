@@ -8,12 +8,12 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "chroma-js": "3.3.0",
-    "eslint": "10.14.0",
+    "eslint": "10.15.0",
     "globals": "17.14.0",
-    "prettier": "3.10.0",
+    "prettier": "3.10.1",
     "prettier-plugin-merge": "0.10.2",
     "prettier-plugin-sh": "0.20.2",
     "prettier-plugin-toml": "4.1.0",
-    "vitest": "5.1.0"
+    "vitest": "5.1.1"
   }
 }
