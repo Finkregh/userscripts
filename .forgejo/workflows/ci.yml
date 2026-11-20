@@ -20,7 +20,7 @@ jobs:
           ref: ${{ steps.extract_branch.outputs.branch }}
 
       - name: Prettier + Markdownlint
-        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/prettier-markdown@1e511a1671fbb9ff4ec261c755f15056d6f7331c # 3.5.0
+        uses: https://git.h.oluflorenzen.de/finkregh/actions/actions/prettier-markdown@fb840d61db870ec7ee35d69cf13869053b1e63f2 # 3.6.0
 
   lint-and-test:
     runs-on: ubuntu-latest
